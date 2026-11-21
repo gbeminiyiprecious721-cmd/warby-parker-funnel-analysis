@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Claude Code local settings
+.claude/
+
+# Jupyter and Python
+.ipynb_checkpoints/
+__pycache__/
+
+# R
+Rplots.pdf
+.Rhistory
+.RData
+
+# SQLite database (recreated by running analysis.ipynb)
+warby_parker.db
