@@ -1,0 +1,74 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 0,
+            "y": 0
+          },
+          "nodeIndex": "funnel",
+          "nodeLineageTag": "b2aa9c77-56a3-44b6-9260-ed75be06b9ce",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 284,
+            "y": 48
+          },
+          "nodeIndex": "funnel_stages",
+          "nodeLineageTag": "415dda94-7721-48a6-bd2a-0fa8e3765200",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 568,
+            "y": 24
+          },
+          "nodeIndex": "purchases",
+          "nodeLineageTag": "b03c6b03-e302-4c8e-a0cc-04e60c188d6a",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 852,
+            "y": 60
+          },
+          "nodeIndex": "quiz_dropoff",
+          "nodeLineageTag": "8d85ee30-16dc-4906-84a8-3060f894ab9e",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

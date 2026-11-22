@@ -1,0 +1,3 @@
+relationship AutoDetected_405e0f20-47f8-4c13-9662-3a9cb3ba7547
+	fromColumn: purchases.user_id
+	toColumn: funnel.user_id

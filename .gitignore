@@ -15,3 +15,43 @@ Rplots.pdf
 
 # SQLite database (recreated by running analysis.ipynb)
 warby_parker.db
+
+# Power BI local state and duplicate binary exports; keep PBIP/PBIR/TMDL source
+**/.pbi/
+*.abf
+*.pbix
+*.pbit
+/powerbi/backups/
+# Retain the original screenshot locally; publish the canonical offer-analysis copy
+/powerbi/images/page2_customer_conversion.PNG
+*.bak
+*.tmp
+*.temp
+*.log
+*~
+
+# Local environments, editor state and operating-system files
+.venv/
+venv/
+.vscode/
+.idea/
+.vs/
+*.code-workspace
+*.user
+Thumbs.db
+Desktop.ini
+.codex/
+.agents/
+.aws/
+
+# Credentials and private local configuration
+.env
+.env.*
+!.env.example
+!.env.template
+credentials.json
+secrets.json
+*.pem
+*.key
+*.pfx
+*.p12

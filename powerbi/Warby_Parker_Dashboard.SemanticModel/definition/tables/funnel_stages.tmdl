@@ -1,0 +1,50 @@
+table funnel_stages
+	lineageTag: 415dda94-7721-48a6-bd2a-0fa8e3765200
+
+	column stage_order
+		dataType: int64
+		formatString: 0
+		lineageTag: 02d950a1-5c0c-47b4-9898-f90a128f8ce3
+		summarizeBy: sum
+		sourceColumn: stage_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column stage
+		dataType: string
+		lineageTag: 25d2ca94-a37d-40f9-bdc8-5f1f400e2813
+		summarizeBy: none
+		sourceColumn: stage
+
+		annotation SummarizationSetBy = Automatic
+
+	column customers
+		dataType: int64
+		formatString: 0
+		lineageTag: 1b5965a2-93eb-42cb-905a-dc7399b1b1d3
+		summarizeBy: sum
+		sourceColumn: customers
+
+		annotation SummarizationSetBy = Automatic
+
+	column pct_of_quiz
+		dataType: double
+		lineageTag: 01114c80-ef2d-4e6c-adf5-4e91eb749734
+		summarizeBy: sum
+		sourceColumn: pct_of_quiz
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition funnel_stages = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(Text.TrimEnd(#"CSV Folder", {"\", "/"}) & "\funnel_stages.csv"),[Delimiter=",", Columns=4, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"stage_order", Int64.Type}, {"stage", type text}, {"customers", Int64.Type}, {"pct_of_quiz", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,55 @@
+table quiz_dropoff
+	lineageTag: 8d85ee30-16dc-4906-84a8-3060f894ab9e
+
+	/// Customers reaching question 5 as a percentage of customers starting at question 1.
+	measure 'Quiz Finish Rate' =
+			DIVIDE(
+			    CALCULATE(
+			        SUM(quiz_dropoff[customers]),
+			        quiz_dropoff[question_number] = 5
+			    ),
+			    CALCULATE(
+			        SUM(quiz_dropoff[customers]),
+			        quiz_dropoff[question_number] = 1
+			    )
+			)
+		formatString: 0.0%
+		lineageTag: 6ab93bc2-14d7-49f6-90cd-ccbdc1f12426
+
+	column question_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 4b8f5fc7-0e8c-48ab-afa6-7bb9e0f4c58b
+		summarizeBy: sum
+		sourceColumn: question_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column question
+		dataType: string
+		lineageTag: 5fcfcdb4-dc3a-4bf6-badc-49d4ebcc1dcd
+		summarizeBy: none
+		sourceColumn: question
+
+		annotation SummarizationSetBy = Automatic
+
+	column customers
+		dataType: int64
+		formatString: 0
+		lineageTag: 437956dc-df27-4dfb-8a12-be5860df1879
+		summarizeBy: sum
+		sourceColumn: customers
+
+		annotation SummarizationSetBy = Automatic
+
+	partition quiz_dropoff = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(Text.TrimEnd(#"CSV Folder", {"\", "/"}) & "\quiz_dropoff.csv"),[Delimiter=",", Columns=3, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"question_number", Int64.Type}, {"question", type text}, {"customers", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table

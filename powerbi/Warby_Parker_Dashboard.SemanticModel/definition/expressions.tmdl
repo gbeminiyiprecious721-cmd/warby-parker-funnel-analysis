@@ -1,0 +1,5 @@
+/// Absolute path to the folder containing funnel.csv, funnel_stages.csv, purchases.csv and quiz_dropoff.csv. Set this once after cloning the repository.
+expression 'CSV Folder' = "C:\YOUR_CHECKOUT\warby-parker-funnel-analysis\powerbi" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 23110ff5-0eb6-4050-a7cf-7c77d1399ef2
+
+	annotation PBI_ResultType = Text

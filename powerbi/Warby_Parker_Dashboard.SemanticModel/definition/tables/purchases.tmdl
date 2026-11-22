@@ -1,0 +1,64 @@
+table purchases
+	lineageTag: b03c6b03-e302-4c8e-a0cc-04e60c188d6a
+
+	column user_id
+		dataType: string
+		lineageTag: 988b2f2c-765e-4977-81c2-3c5e6cea1a43
+		summarizeBy: none
+		sourceColumn: user_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 03b081b5-a255-4d94-b366-784738d201e4
+		summarizeBy: sum
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column style
+		dataType: string
+		lineageTag: c0fbae5a-fe8f-43e0-ae21-c2e8dfc4c2c7
+		summarizeBy: none
+		sourceColumn: style
+
+		annotation SummarizationSetBy = Automatic
+
+	column model_name
+		dataType: string
+		lineageTag: 479282ba-6b32-4d19-9191-e73d9500c5ae
+		summarizeBy: none
+		sourceColumn: model_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column color
+		dataType: string
+		lineageTag: 8f9400b6-87e3-4833-9c60-f6bed4b770cf
+		summarizeBy: none
+		sourceColumn: color
+
+		annotation SummarizationSetBy = Automatic
+
+	column price
+		dataType: int64
+		formatString: 0
+		lineageTag: e6c141b7-835d-40c8-bf5c-aa0d6961e8fe
+		summarizeBy: sum
+		sourceColumn: price
+
+		annotation SummarizationSetBy = Automatic
+
+	partition purchases = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(Text.TrimEnd(#"CSV Folder", {"\", "/"}) & "\purchases.csv"),[Delimiter=",", Columns=6, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"user_id", type text}, {"product_id", Int64.Type}, {"style", type text}, {"model_name", type text}, {"color", type text}, {"price", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table

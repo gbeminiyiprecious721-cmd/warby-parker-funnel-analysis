@@ -1,0 +1,130 @@
+table funnel
+	lineageTag: b2aa9c77-56a3-44b6-9260-ed75be06b9ce
+
+	/// Number of customers who completed the quiz.
+	measure 'Quiz Customers' = COUNTROWS(funnel)
+		lineageTag: 9530acd0-4a50-4ac0-9957-ad7fcc11a6d1
+
+	/// Number of quiz customers who received a Home Try-On box.
+	measure 'Home Try-On Customers' = SUM(funnel[got_home_try_on])
+		lineageTag: 5c080c58-5347-446d-9fb9-e584d5be681c
+
+	/// Number of quiz customers who made a purchase.
+	measure Purchases = SUM(funnel[purchased])
+		lineageTag: 71bf7bae-2f2a-4c58-91f5-02f875d6d6e6
+
+	/// Percentage of quiz customers who received a Home Try-On box.
+	measure 'Quiz-to-Try-On Conversion' = DIVIDE([Home Try-On Customers], [Quiz Customers])
+		formatString: 0.0%
+		lineageTag: 4955776e-a87b-4c07-bd4e-3d8f59f76adb
+
+	/// Purchase customers divided by Home Try-On customers.
+	measure 'Try-On-to-Purchase Conversion' = DIVIDE([Purchases], [Home Try-On Customers])
+		formatString: 0.0%
+		lineageTag: 207f0884-6cc3-44f9-8b52-3c016f42b993
+
+	/// Percentage of quiz customers who made a purchase.
+	measure 'Overall Purchase Conversion' = DIVIDE([Purchases], [Quiz Customers])
+		formatString: 0.0%
+		lineageTag: 9e11774b-8d9b-4976-abca-82190f53d69e
+
+	/// Purchase rate among Home Try-On customers offered 3 pairs.
+	measure '3-Pair Purchase Rate' =
+			CALCULATE(
+			    [Try-On-to-Purchase Conversion],
+			    funnel[number_of_pairs] = "3 pairs"
+			)
+		formatString: 0.0%
+		lineageTag: b3709dad-9405-40f0-ae84-ebb11ac07fa3
+
+	/// Purchase rate among Home Try-On customers offered 5 pairs.
+	measure '5-Pair Purchase Rate' =
+			CALCULATE(
+			    [Try-On-to-Purchase Conversion],
+			    funnel[number_of_pairs] = "5 pairs"
+			)
+		formatString: 0.0%
+		lineageTag: 25eda09f-8777-4d13-861b-905e4b8b0595
+
+	/// 5-pair purchase rate minus 3-pair purchase rate, interpreted in percentage points.
+	measure 'Purchase Rate Difference' = [5-Pair Purchase Rate] - [3-Pair Purchase Rate]
+		formatString: 0.0%
+		lineageTag: 83b497c9-dec8-4147-a7e7-d7503beb9b2a
+
+	column user_id
+		dataType: string
+		lineageTag: b13121b1-53bd-40c5-b586-41c462681993
+		summarizeBy: none
+		sourceColumn: user_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column style
+		dataType: string
+		lineageTag: 302154ef-9c6d-407e-ad61-9bcc4a6350ac
+		summarizeBy: none
+		sourceColumn: style
+
+		annotation SummarizationSetBy = Automatic
+
+	column fit
+		dataType: string
+		lineageTag: eac9389a-fc4b-4422-8cfe-bce118f0fbad
+		summarizeBy: none
+		sourceColumn: fit
+
+		annotation SummarizationSetBy = Automatic
+
+	column shape
+		dataType: string
+		lineageTag: 6495bde4-55de-4e4e-8bb6-b71f68f45ca1
+		summarizeBy: none
+		sourceColumn: shape
+
+		annotation SummarizationSetBy = Automatic
+
+	column color
+		dataType: string
+		lineageTag: 93c7b494-4910-41f8-b980-120ee2ef11d0
+		summarizeBy: none
+		sourceColumn: color
+
+		annotation SummarizationSetBy = Automatic
+
+	column number_of_pairs
+		dataType: string
+		lineageTag: 8f3279e5-1098-4a0c-b2cf-d266af44c405
+		summarizeBy: none
+		sourceColumn: number_of_pairs
+
+		annotation SummarizationSetBy = Automatic
+
+	column got_home_try_on
+		dataType: int64
+		formatString: 0
+		lineageTag: b715b837-7b32-4305-9bd8-2f77a1e3215f
+		summarizeBy: sum
+		sourceColumn: got_home_try_on
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchased
+		dataType: int64
+		formatString: 0
+		lineageTag: e581dfcc-9072-456b-b35b-aaa145ccfb4f
+		summarizeBy: sum
+		sourceColumn: purchased
+
+		annotation SummarizationSetBy = Automatic
+
+	partition funnel = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(Text.TrimEnd(#"CSV Folder", {"\", "/"}) & "\funnel.csv"),[Delimiter=",", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"user_id", type text}, {"style", type text}, {"fit", type text}, {"shape", type text}, {"color", type text}, {"number_of_pairs", type text}, {"got_home_try_on", Int64.Type}, {"purchased", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
